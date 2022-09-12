@@ -19,11 +19,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
 app.get("/", function(req, res) {
+  console.log(posts);
+
   res.render("home", {
     homeParagraph: homeStartingContent,
+    posts: posts
   });
 
-  console.log(posts);
+
 });
 
 app.get("/contact", function(req, res) {

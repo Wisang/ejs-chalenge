@@ -6,4 +6,10 @@
   <%= homeParagraph %>
 </p>
 
+<% for (post in posts) { %>
+  <p>
+    <%= posts[post].content %>
+  </p>
+<% } %>
+
 <%- include("partials/footer") -%>
