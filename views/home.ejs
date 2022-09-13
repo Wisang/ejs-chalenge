@@ -6,10 +6,9 @@
   <%= homeParagraph %>
 </p>
 
-<% for (post in posts) { %>
-  <p>
-    <%= posts[post].content %>
-  </p>
-<% } %>
+<% posts.forEach(function(post) { %>
+<h1><%= post.title %></h1>
+<p><%= post.content %></p>
+<% }); %>
 
 <%- include("partials/footer") -%>
