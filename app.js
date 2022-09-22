@@ -45,13 +45,22 @@ app.get("/", function(req, res) {
       });
     }
   });
-
-  // res.render("home", {
-  //   homeParagraph: homeStartingContent,
-  //   posts: posts,
-  //   // pageAddress: "posts" + _.lowerCase(post.title)
-  // });
 });
+
+app.get("/posts/:postId", function(req, res) {
+  const requestedPostId = req.params.postId;
+
+  Content.findOne({_id: requestedPostId}, function(err, foundPost) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("post", {
+        title: foundPost.title,
+        content: foundPost.body
+      });
+    }
+  });
+})
 
 app.get("/contact", function(req, res) {
   res.render("contact", {
@@ -83,8 +92,12 @@ app.post("/compose", function(req, res) {
     body: req.body.postBody
   });
 
-  content.save(function() {
-    res.redirect("/");
+  content.save(function(err) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect("/");
+    }
   })
 
   // res.redirect("/");
