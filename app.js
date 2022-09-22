@@ -35,11 +35,22 @@ const contentsSchema = {
 const Content = mongoose.model('Content', contentsSchema);
 
 app.get("/", function(req, res) {
-  res.render("home", {
-    homeParagraph: homeStartingContent,
-    posts: posts,
-    // pageAddress: "posts" + _.lowerCase(post.title)
+  Content.find({}, function(err, foundPosts) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("home", {
+        homeParagraph: homeStartingContent,
+        posts: foundPosts
+      });
+    }
   });
+
+  // res.render("home", {
+  //   homeParagraph: homeStartingContent,
+  //   posts: posts,
+  //   // pageAddress: "posts" + _.lowerCase(post.title)
+  // });
 });
 
 app.get("/contact", function(req, res) {
