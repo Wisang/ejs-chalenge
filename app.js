@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const mongoose = require("mongoose");
 
 var _ = require("lodash");
 
@@ -19,8 +20,19 @@ const posts = [];
 app.set('view engine', 'ejs');
 // app.set('views', path.join(__dirname, 'views'));
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(express.static("public"));
+
+mongoose.connect("mongodb://localhost:27017/blogDB");
+
+const contentsSchema = {
+  title: String,
+  body: String
+}
+
+const Content = mongoose.model('Content', contentsSchema);
 
 app.get("/", function(req, res) {
   res.render("home", {
@@ -48,19 +60,28 @@ app.get("/about", function(req, res) {
 });
 
 app.post("/compose", function(req, res) {
-  const post = {
+  // const post = {
+  //   title: req.body.postTitle,
+  //   content: req.body.postBody
+  // };
+  //
+  // posts.push(post);
+
+  const content = new Content({
     title: req.body.postTitle,
-    content: req.body.postBody
-  };
+    body: req.body.postBody
+  });
 
-  posts.push(post);
+  content.save(function() {
+    res.redirect("/");
+  })
 
-  res.redirect("/");
+  // res.redirect("/");
 });
 
 app.get("/posts/:postName", function(req, res) {
   posts.forEach(function(post) {
-    if(_.lowerCase(req.params.postName) === _.lowerCase(post.title)) {
+    if (_.lowerCase(req.params.postName) === _.lowerCase(post.title)) {
       res.render("post", {
         post: post
       });
